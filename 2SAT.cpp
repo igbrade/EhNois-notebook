@@ -1,3 +1,5 @@
+vector<int> grafo[MAXN],fim;
+
 struct sat2{
   // vertices impares = !
   // x e -x (-x = anti(x))
