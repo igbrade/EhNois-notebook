@@ -1,6 +1,6 @@
 struct sat2{
   // vertices impares = !
-  // x e -x
+  // x e -x (-x = anti(x))
  
   int q;
   int comp[MAXN];
@@ -19,13 +19,15 @@ struct sat2{
     if(x >= 0) return 2 * (x - 1);
     else return anti(node(abs(x)));
   }
- 
+  
+  // adiciona implicação ao grafo (a implica b)
   void implica(int a,int b){
     a = node(a) , b = node(b);
     grafo[a].push_back(b);
     inv[b].push_back(a);
   }
- 
+  
+  // calcula as componentes fortemente conexas
   void calc_comp(int n){
     for(int i = 1;i <= 2*n;i++)
       if(vis[i] == false)
@@ -46,7 +48,8 @@ struct sat2{
   void join(int a,int b){
     comp[find(a)] = find(b);
   }
- 
+  
+  // retorna a componente na qual x pertence
   int cmp(int x){
     x = node(x);
     return find(comp[x]);
@@ -68,7 +71,8 @@ struct sat2{
         dfs2(i);
       }
   }
- 
+  
+  // limpa toda a struct
   void limpa(int n){
     for(int i = 0;i <= 10*n;i++){
       comp[i] = i;
