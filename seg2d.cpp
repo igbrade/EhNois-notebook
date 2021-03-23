@@ -19,7 +19,7 @@ int get(int a, int b, int no[]){
     return ans;
 }
 
-void upd(int p, int x, int no[]) {
+void upd(int p, int x, int no[]){
     for(p += m, no[p] = x;p > 1;p >>= 1)
         no[p >> 1] = max(no[p], no[p ^ 1]);
 }
