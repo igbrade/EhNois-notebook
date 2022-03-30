@@ -1,0 +1,74 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+struct trie{
+    int p = -1;
+    int link = -1;
+    int c = -1;
+
+    int next[30];
+    int go[30];
+
+    trie(){
+        memset(next,-1,sizeof next);
+        memset(go,-1,sizeof go);
+    }
+};
+
+vector<trie> v;
+
+void add_string(string s){
+    int no = 0;
+
+    for(int i = 0;i < s.size();i++){
+        int c = s[i] - 'a';
+
+        if(v[no].next[c] == -1){
+            v[no].next[c] = v.size();
+
+            trie novo;
+            novo.p = no;
+            novo.c = c;
+
+            v.push_back(novo);
+        }
+        no = v[no].next[c];   
+    }
+}
+
+int pd(int no,int c);
+int get_link(int no);
+
+int pd(int no,int c){
+    if(v[no].go[c] != -1) return v[no].go[c];
+    
+    if(v[no].next[c] != -1) v[no].go[c] = v[no].next[c];
+    else if(no == 0) v[no].go[c] = 0;
+    else v[no].go[c] = pd(get_link(no),c);
+
+    return v[no].go[c];
+}
+
+int get_link(int no){   
+    if(no == 0 || v[no].p == 0) return v[no].link = 0;
+    if(v[no].link != -1) return v[no].link;
+    return v[no].link = pd(get_link(v[no].p),v[no].c);
+}
+
+int main(){
+    trie root;
+    root.link = 0;
+    v.push_back(root);
+
+    int n;
+    cin >> n;
+
+    for(int i = 1;i <= n;i++){
+        string s;
+        cin >> s;
+        add_string(s);
+    }
+
+    for(int i = 0;i < v.size();i++) cout << "| " << i << " " << char(v[i].c + 'a') << " | " << v[i].p << " " << get_link(i) << endl;
+}
