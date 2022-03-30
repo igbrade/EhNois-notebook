@@ -1,8 +1,8 @@
-vector<int> grafo[MAXN],fim;
-
 struct sat2{
   // vertices impares = !
   // x e -x (-x = anti(x))
+ 
+  vector<int> grafo[MAXN],inv[MAXN],fim;
  
   int q;
   int comp[MAXN];
@@ -73,13 +73,19 @@ struct sat2{
         dfs2(i);
       }
   }
-  
+ 
   // limpa toda a struct
   void limpa(int n){
     for(int i = 0;i <= 10*n;i++){
       comp[i] = i;
       vis[i] = false;
+      grafo[i].clear();
+      inv[i].clear();
     }
+ 
+    fim.clear();
     q = 0;
   }
 };
+
+sat2 s;
