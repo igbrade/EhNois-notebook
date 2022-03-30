@@ -1,0 +1,73 @@
+const int MAXN = 410;
+const int INF = 0x3f3f3f3f;
+ 
+struct edge{
+  int v, c, f;
+};
+ 
+vector<edge> edgs;
+vector<int> g[MAXN];
+int src, snk, h[MAXN], ptr[MAXN];
+ 
+void add_edge (int u, int v, int c) {
+  int k = edgs.size();
+  edgs.push_back({v, c, 0});
+  edgs.push_back({u, 0, 0});
+  g[u].push_back(k);
+  g[v].push_back(k+1);
+}
+ 
+bool bfs() {
+  memset(h, 0, sizeof h);
+
+  queue<int> q;
+  h[src] = 1;
+  q.push(src);
+
+  while(!q.empty()) {
+    int u = q.front();
+
+    q.pop();
+
+    for(int i : g[u]) {
+      int v = edgs[i].v;
+      
+        if(!h[v] && edgs[i].f < edgs[i].c){
+          q.push(v);
+          h[v] = h[u] + 1;
+        }
+      }
+    }
+    return h[snk];
+}
+ 
+int dfs (int u, int flow) {
+    if (!flow || u == snk) return flow;
+ 
+    for (int &i = ptr[u]; i < g[u].size(); ++i){
+      edge &ed = edgs[g[u][i]];
+      edge &red = edgs[(g[u][i] ^ 1)];
+
+      int v = ed.v;
+ 
+      if (h[v] != h[u] + 1)  continue;
+ 
+      int inc = min(flow, ed.c - ed.f);
+      inc = dfs(v, inc);
+      if(inc){
+        ed.f += inc;
+        red.f -= inc;
+        return inc;
+      }
+    }
+    return 0;
+}
+ 
+int dinic() {
+  int flow = 0;
+  while (bfs()) {
+    memset(ptr, 0, sizeof ptr);
+    while (int inc = dfs(src, INF)) flow += inc;
+  }
+  return flow;
+}
